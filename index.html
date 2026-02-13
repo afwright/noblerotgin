@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noble Rot Gin | The Spirit of Bordeaux</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&amp;family=Playfair+Display:ital,wght@0,400;0,600;1,400&amp;family=Reenie+Beanie&amp;display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --c-bg: #090909;
+            --c-surface: rgba(20, 20, 20, 0.64);
+            --c-text: #f4f3ef;
+            --c-muted: rgba(244, 243, 239, 0.72);
+            --c-subtle: rgba(244, 243, 239, 0.52);
+            --c-gold: #c5a059;
+            --c-border: rgba(255, 255, 255, 0.12);
+            --c-border-strong: rgba(255, 255, 255, 0.2);
+
+            --f-head: 'Playfair Display', serif;
+            --f-body: 'Lato', sans-serif;
+            --f-note: 'Reenie Beanie', cursive;
+
+            --radius: 4px;
+            --blur-glass: 12px;
+
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            --space-10: 40px;
+            --space-12: 48px;
+            --space-16: 64px;
+            --space-20: 80px;
+            --space-24: 96px;
+            --space-28: 112px;
+            --space-32: 128px;
+
+            --shadow-elev-1: 0 20px 48px rgba(0, 0, 0, 0.42);
+            --shadow-elev-2: 0 32px 64px rgba(0, 0, 0, 0.52);
+
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --dur-fast: 180ms;
+            --dur-base: 260ms;
+            --dur-slow: 900ms;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--c-bg);
+            color: var(--c-text);
+            font-family: var(--f-body);
+            font-size: 1rem;
+            line-height: 1.5;
+            letter-spacing: 0.01em;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: var(--f-head);
+            line-height: 1.1;
+            letter-spacing: 0.03em;
+            font-weight: 400;
+            text-wrap: balance;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 6vw, 4.75rem);
+        }
+
+        h2 {
+            font-size: clamp(2rem, 4.5vw, 3.25rem);
+            margin-bottom: var(--space-6);
+            background: linear-gradient(45deg, #fff 0%, var(--c-gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            margin-bottom: var(--space-6);
+            color: var(--c-muted);
+            text-wrap: pretty;
+        }
+
+        a,
+        button,
+        .glass-panel,
+        .serve-img {
+            transition:
+                transform var(--dur-base) var(--ease-out),
+                opacity var(--dur-base) var(--ease-out),
+                background-color var(--dur-base) var(--ease-out),
+                color var(--dur-base) var(--ease-out),
+                border-color var(--dur-base) var(--ease-out),
+                box-shadow var(--dur-base) var(--ease-out);
+        }
+
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--c-gold);
+            outline-offset: 2px;
+        }
+
+        .global-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-layer {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+        }
+
+        #bg-base {
+            background-image: url('./Downloads/NobleRotStillLife.png');
+            filter: blur(4px) brightness(0.32);
+            transform: scale(1.05);
+        }
+
+        #bg-paper {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.1'/%3E%3C/svg%3E");
+            mix-blend-mode: overlay;
+            opacity: 0.36;
+        }
+
+        #bg-frost {
+            background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.84) 100%);
+            mix-blend-mode: multiply;
+        }
+
+        #bg-gold {
+            background-image:
+                radial-gradient(1px 1px at 10% 10%, var(--c-gold) 100%, transparent),
+                radial-gradient(1px 1px at 20% 80%, var(--c-gold) 100%, transparent),
+                radial-gradient(2px 2px at 80% 40%, var(--c-gold) 100%, transparent);
+            background-size: 500px 500px;
+            opacity: 0.24;
+            animation: twinkle 12s infinite linear;
+        }
+
+        @keyframes twinkle {
+            0% {
+                opacity: 0.24;
+                transform: translateY(0);
+            }
+            50% {
+                opacity: 0.38;
+            }
+            100% {
+                opacity: 0.24;
+                transform: translateY(-20px);
+            }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1248px;
+            margin-inline: auto;
+            padding-inline: var(--space-10);
+        }
+
+        section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-block: var(--space-32);
+            scroll-margin-top: var(--space-12);
+        }
+
+        .glass-panel {
+            background: var(--c-surface);
+            border: 1px solid var(--c-border);
+            border-radius: var(--radius);
+            backdrop-filter: blur(var(--blur-glass));
+            -webkit-backdrop-filter: blur(var(--blur-glass));
+            box-shadow: var(--shadow-elev-1);
+            padding: var(--space-12);
+            position: relative;
+        }
+
+        .glass-panel:hover {
+            transform: translateY(-4px);
+            border-color: rgba(197, 160, 89, 0.36);
+            box-shadow: var(--shadow-elev-2);
+        }
+
+        .annotation {
+            display: inline-block;
+            margin-bottom: var(--space-3);
+            color: var(--c-gold);
+            font-family: var(--f-note);
+            font-size: 1.5rem;
+            transform: rotate(-2deg);
+            letter-spacing: 0.02em;
+        }
+
+        .btn {
+            min-height: var(--space-12);
+            min-width: var(--space-12);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+            padding-inline: var(--space-8);
+            padding-block: var(--space-3);
+            border-radius: var(--radius);
+            border: 1px solid var(--c-gold);
+            background: transparent;
+            color: var(--c-gold);
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        .btn:hover {
+            background: var(--c-gold);
+            color: #0d0d0d;
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(197, 160, 89, 0.34);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            opacity: 0.92;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(var(--space-12));
+            transition:
+                opacity var(--dur-slow) var(--ease-out),
+                transform var(--dur-slow) var(--ease-out);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #hero {
+            flex-direction: column;
+            text-align: center;
+            padding-top: var(--space-24);
+            padding-bottom: var(--space-20);
+        }
+
+        .hero-visual {
+            width: 100%;
+            max-width: 1680px;
+            height: 60vh;
+            margin-bottom: calc(var(--space-16) * -1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-visual img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.5));
+        }
+
+        .hero-content {
+            max-width: 832px;
+            margin-inline: auto;
+            margin-top: 5vh;
+            z-index: 2;
+        }
+
+        .hero-head {
+            margin-bottom: var(--space-4);
+        }
+
+        .hero-sub {
+            max-width: 60ch;
+            margin-inline: auto;
+            margin-bottom: var(--space-8);
+            font-size: 1.125rem;
+        }
+
+        #origin .glass-panel,
+        .process-content {
+            max-width: 736px;
+        }
+
+        #process {
+            flex-direction: column;
+            gap: var(--space-12);
+        }
+
+        .process-visual {
+            width: 100%;
+            max-width: 960px;
+            position: relative;
+        }
+
+        .process-visual img {
+            width: 100%;
+            height: auto;
+            border-radius: var(--radius);
+            border: 1px solid var(--c-border);
+            filter: sepia(1) contrast(1.2) brightness(0.9);
+            transition: filter var(--dur-fast) linear;
+        }
+
+        .process-content {
+            text-align: center;
+        }
+
+        #serve {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-16);
+            align-items: center;
+        }
+
+        .serve-img {
+            width: 100%;
+            border-radius: var(--radius);
+            border: 1px solid var(--c-border);
+            box-shadow: var(--shadow-elev-1);
+        }
+
+        .serve-img:hover {
+            transform: translateY(-4px);
+            border-color: var(--c-border-strong);
+        }
+
+        .recipe-list {
+            list-style: none;
+            margin-block: var(--space-8);
+            display: grid;
+            gap: var(--space-2);
+            color: var(--c-muted);
+        }
+
+        .recipe-note {
+            color: var(--c-subtle);
+            font-size: 0.875rem;
+            font-style: italic;
+            margin-bottom: 0;
+        }
+
+        #notes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: stretch;
+            max-width: 1088px;
+            margin-inline: auto;
+            width: 100%;
+        }
+
+        .notes-visual {
+            position: relative;
+        }
+
+        .notes-visual img {
+            width: 100%;
+            height: 100%;
+            min-height: 640px;
+            object-fit: cover;
+            border-radius: var(--radius) 0 0 var(--radius);
+            border: 1px solid var(--c-border);
+            border-right: 0;
+        }
+
+        .notes-content {
+            border-left: 0;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .tasting-grid {
+            margin-top: var(--space-8);
+            padding-top: var(--space-8);
+            border-top: 1px solid var(--c-border);
+            display: grid;
+            grid-template-columns: 104px 1fr;
+            column-gap: var(--space-6);
+            row-gap: var(--space-4);
+            font-size: 0.9375rem;
+        }
+
+        .tasting-label {
+            color: var(--c-gold);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        footer {
+            padding-block: var(--space-20);
+            text-align: center;
+            background: rgba(5, 5, 5, 0.9);
+            border-top: 1px solid var(--c-border);
+        }
+
+        .footer-cta {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: var(--space-6);
+            margin-bottom: var(--space-12);
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--c-gold);
+            color: #050505;
+        }
+
+        .trade-link {
+            display: inline-flex;
+            min-height: var(--space-12);
+            align-items: center;
+            color: #8f8a7e;
+            text-decoration: none;
+            font-size: 0.875rem;
+            margin-bottom: var(--space-4);
+            padding-inline: var(--space-2);
+        }
+
+        .trade-link:hover {
+            color: var(--c-gold);
+            transform: translateY(-2px);
+        }
+
+        .legal-copy {
+            margin-bottom: var(--space-2);
+            color: #7d786c;
+            font-size: 0.875rem;
+        }
+
+        .copyright {
+            color: #555247;
+            font-size: 0.75rem;
+            margin-bottom: 0;
+        }
+
+        #age-gate {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            background: #000;
+            padding: var(--space-6);
+        }
+
+        #age-gate.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 800ms var(--ease-out);
+        }
+
+        .gate-content {
+            max-width: 520px;
+        }
+
+        .gate-logo {
+            font-family: var(--f-head);
+            font-size: clamp(2.5rem, 8vw, 3.5rem);
+            line-height: 1.1;
+            letter-spacing: 0.08em;
+            color: var(--c-gold);
+            margin-bottom: var(--space-8);
+        }
+
+        .gate-copy {
+            color: #8a8579;
+            font-size: 0.875rem;
+            margin-bottom: 0;
+        }
+
+        .gate-actions {
+            margin-top: var(--space-8);
+            display: flex;
+            justify-content: center;
+            gap: var(--space-4);
+            flex-wrap: wrap;
+        }
+
+        .btn-secondary {
+            border-color: #444;
+            color: #8a8579;
+        }
+
+        @media (max-width: 992px) {
+            #serve,
+            #notes {
+                grid-template-columns: 1fr;
+            }
+
+            #notes {
+                max-width: 736px;
+                gap: 0;
+            }
+
+            .notes-visual img {
+                min-height: 400px;
+                border-right: 1px solid var(--c-border);
+                border-bottom: 0;
+                border-radius: var(--radius) var(--radius) 0 0;
+            }
+
+            .notes-content {
+                border-top: 0;
+                border-left: 1px solid var(--c-border);
+                border-radius: 0 0 var(--radius) var(--radius);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding-inline: var(--space-6);
+            }
+
+            section {
+                min-height: auto;
+                padding-block: var(--space-24);
+            }
+
+            #hero {
+                padding-top: var(--space-20);
+            }
+
+            .hero-visual {
+                height: 44vh;
+                margin-bottom: calc(var(--space-12) * -1);
+            }
+
+            .glass-panel {
+                padding: var(--space-8);
+            }
+
+            .hero-sub {
+                font-size: 1rem;
+            }
+
+            .tasting-grid {
+                grid-template-columns: 1fr;
+                row-gap: var(--space-2);
+            }
+
+            .footer-cta {
+                position: sticky;
+                bottom: var(--space-4);
+                padding: var(--space-4);
+                border-radius: var(--radius);
+                background: rgba(9, 9, 9, 0.82);
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+            }
+
+            .footer-cta .btn {
+                flex: 1 1 220px;
+                width: 100%;
+            }
+
+            .btn,
+            .trade-link {
+                min-height: 48px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 1ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 1ms !important;
+                scroll-behavior: auto !important;
+            }
+
+            .reveal {
+                opacity: 1;
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="age-gate">
+        <div class="gate-content">
+            <div class="gate-logo">NOBLE ROT</div>
+            <h2>Are you of legal drinking age?</h2>
+            <p class="gate-copy">By entering this site, you agree to our Terms of Service and Privacy Policy.</p>
+            <div class="gate-actions">
+                <button class="btn" id="btn-enter">Yes, I am 21+</button>
+                <button class="btn btn-secondary">No</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="global-bg">
+        <div id="bg-base" class="bg-layer"></div>
+        <div id="bg-paper" class="bg-layer"></div>
+        <div id="bg-frost" class="bg-layer"></div>
+        <div id="bg-gold" class="bg-layer"></div>
+    </div>
+
+    <main>
+        <section id="hero">
+            <div class="hero-visual reveal">
+                <img src="./Downloads/NobleRotWideScreenHero.png" alt="Surreal Landscape">
+            </div>
+
+            <div class="hero-content glass-panel reveal">
+                <h1 class="hero-head">The Spirit of Bordeaux.<br>Refined by Cold.</h1>
+                <p class="hero-sub">An ultra-premium Old Tom Gin born from noble grapes, enriched with Sauternes, and perfected through the alchemy of fractional freezing.</p>
+                <a href="#footer" class="btn">Shop the Release</a>
+            </div>
+        </section>
+
+        <section id="origin">
+            <div class="glass-panel reveal">
+                <span class="annotation">Grape to Glass</span>
+                <h2>Gold from the Grey.</h2>
+                <p>True luxury requires patience. Created in collaboration with Bordeaux Distilling, Noble Rot is a gin that begins where others end. We start with select Semillon and Sauvignon Blanc grapes from the misty vineyards of Sauternes, harvested only after the arrival of <em>Botrytis cinerea</em>, the Noble Rot.</p>
+                <p>This benevolent decay withers the grape, concentrating the sugars and flavors into a nectar of unparalleled complexity. We do not just distill gin. We harvest the soul of the vineyard.</p>
+            </div>
+        </section>
+
+        <section id="process">
+            <div class="process-visual reveal">
+                <img id="process-img" src="./Downloads/NobleRotProductionCartoon1.png" alt="The Machine">
+            </div>
+            <div class="process-content glass-panel reveal">
+                <span class="annotation">The Alchemical Transformation</span>
+                <h2>Concentrated by Frost.</h2>
+                <p><strong>Heat creates. Cold perfects.</strong></p>
+                <p>Unlike traditional heat-only distillation which can strip delicate aromas, Noble Rot undergoes a proprietary Fractional Freezing process. By chilling the spirit to extreme sub-zero temperatures, we freeze out the water, leaving behind only the heart of the heart, a viscous, flavor-dense spirit rich with the honeyed notes of Sauternes and the crisp snap of juniper.</p>
+            </div>
+        </section>
+
+        <section id="serve" class="container">
+            <div class="reveal">
+                <img src="./Downloads/NobleRotStillLifeBottle.png" alt="Noble Blue Martini" class="serve-img">
+            </div>
+            <div class="glass-panel reveal">
+                <h2>The Noble Blue Martini</h2>
+                <p>A pairing as old as Bordeaux itself. The decadent aromatics of Sauternes has long been the perfect partner to the sharp, salty bite of Roquefort. We have bottled that culinary harmony.</p>
+                <ul class="recipe-list">
+                    <li><strong>The Pour:</strong> 3 oz Noble Rot Old Tom Gin.</li>
+                    <li><strong>The Twist:</strong> A high-quality blue cheese-stuffed olive.</li>
+                </ul>
+                <p class="recipe-note">Stirred over ice and strained into a chilled coupe. As you sip, the gin's inherent stone fruit and wildflower notes wash over the palate, grounded by the savory, saline punch of the blue cheese.</p>
+            </div>
+        </section>
+
+        <section id="notes">
+            <div class="notes-visual reveal">
+                <img src="./Downloads/NobleRotMedicalPoster.png" alt="Botanical Study">
+            </div>
+            <div class="notes-content glass-panel reveal">
+                <span class="annotation">From Vineyard to Laboratory</span>
+                <h2>Botanical Study</h2>
+
+                <div class="tasting-grid">
+                    <div class="tasting-label">Nose</div>
+                    <div>Dried apricot, honeysuckle, and fresh pine.</div>
+
+                    <div class="tasting-label">Palate</div>
+                    <div>Viscous and warming. Candied lemon peel, vanilla bean, and a distinct rancio note from the Sauternes.</div>
+
+                    <div class="tasting-label">Finish</div>
+                    <div>Long, off-dry, and nutty, with a whisper of saffron.</div>
+                </div>
+            </div>
+        </section>
+
+        <footer id="footer">
+            <div class="container">
+                <div class="footer-cta">
+                    <button class="btn btn-primary">Acquire</button>
+                    <a href="mailto:berry@noblerotgin.com" class="btn">Trade Inquiries</a>
+                </div>
+                <p class="legal-copy">Bring Noble Rot to your backbar. Inquire for Distribution.</p>
+                <p class="copyright">&copy; 2024 ANW &amp; Bordeaux Distilling.</p>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const ageGate = document.getElementById('age-gate');
+            const enterBtn = document.getElementById('btn-enter');
+            const isVerified = localStorage.getItem('nobleRotVerified');
+
+            if (isVerified === 'true') {
+                ageGate.style.display = 'none';
+            } else {
+                document.body.style.overflow = 'hidden';
+            }
+
+            enterBtn.addEventListener('click', () => {
+                localStorage.setItem('nobleRotVerified', 'true');
+                ageGate.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+                window.setTimeout(() => {
+                    ageGate.style.display = 'none';
+                }, 800);
+            });
+
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('active');
+                        }
+                    });
+                },
+                {
+                    threshold: 0.15,
+                    rootMargin: '0px 0px -48px 0px'
+                }
+            );
+
+            document.querySelectorAll('.reveal').forEach((element) => {
+                observer.observe(element);
+            });
+
+            const bgBase = document.getElementById('bg-base');
+            const processSection = document.getElementById('process');
+            const processImg = document.getElementById('process-img');
+
+            window.addEventListener('scroll', () => {
+                const scrollY = window.scrollY;
+                const windowHeight = window.innerHeight;
+
+                if (bgBase) {
+                    bgBase.style.transform = `scale(1.05) translate3d(0, ${scrollY * 0.1}px, 0)`;
+                }
+
+                if (processSection && processImg) {
+                    const rect = processSection.getBoundingClientRect();
+                    let percent = 1 - rect.top / windowHeight;
+                    percent = Math.max(0, Math.min(1, percent));
+
+                    let sepiaValue = 1;
+                    if (percent > 0.2) {
+                        sepiaValue = 1 - (percent - 0.2) * 2;
+                    }
+                    sepiaValue = Math.max(0, sepiaValue);
+
+                    processImg.style.filter = `sepia(${sepiaValue}) contrast(1.2) brightness(0.9)`;
+                }
+            }, { passive: true });
+        });
+    </script>
+</body>
+</html>
